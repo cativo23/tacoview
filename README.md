@@ -1,4 +1,6 @@
-![tacoview](https://user-images.githubusercontent.com/29267136/186830412-d7f5ffe1-2629-4862-89dd-218b052259e2.png)
+<div align="center">
+ <img  width="600" height="350" src="docs/images/tacoview.png" alt="tacoview">
+</div>
 
 # tacoview
 
