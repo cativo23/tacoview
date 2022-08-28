@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CountryController;
 use App\Http\Controllers\IndexController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -25,4 +26,6 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+
+    Route::resource('countries', CountryController::class);
 });
