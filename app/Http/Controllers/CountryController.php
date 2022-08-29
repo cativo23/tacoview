@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Filters\GlobalSearchFilter;
 use App\Http\Requests\StoreCountryRequest;
 use App\Http\Requests\UpdateCountryRequest;
 use App\Http\Resources\Country\IndexResource;
 use App\Models\Country;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -20,12 +22,7 @@ class CountryController extends Controller
      */
     public function index(): Response
     {
-        $globalSearch = AllowedFilter::callback('global', function ($query, $value) {
-            $query->where(function ($query) use ($value) {
-                Collection::wrap($value)->each(fn($value) => $query
-                    ->orWhere('name', 'LIKE', "%{$value}%"));
-            });
-        });
+        $globalSearch = AllowedFilter::custom('global', new GlobalSearchFilter);
 
         $countries = QueryBuilder::for(Country::class)
             ->defaultSort('name')
@@ -49,67 +46,70 @@ class CountryController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): Response
     {
-        //
+        return Inertia::render('Country/Create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreCountryRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param StoreCountryRequest $request
+     * @return RedirectResponse
      */
-    public function store(StoreCountryRequest $request)
+    public function store(StoreCountryRequest $request): RedirectResponse
     {
-        //
+        $country = Country::create($request->validated());
+
+        session()->flash('success', "Country \"$country->name\" created successfully!");
+
+        return redirect()->back();
     }
 
     /**
      * Display the specified resource.
-     *
-     * @param  \App\Models\Country  $country
-     * @return \Illuminate\Http\Response
      */
-    public function show(Country $country)
+    public function show(Country $country): Response
     {
-        //
+        return Inertia::render('Country/Show', [
+            'country' => $country,
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Country  $country
-     * @return \Illuminate\Http\Response
      */
-    public function edit(Country $country)
+    public function edit(Country $country): Response
     {
-        //
+        return Inertia::render('Country/Edit', [
+            'country' => $country,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateCountryRequest  $request
-     * @param  \App\Models\Country  $country
-     * @return \Illuminate\Http\Response
      */
-    public function update(UpdateCountryRequest $request, Country $country)
+    public function update(UpdateCountryRequest $request, Country $country): RedirectResponse
     {
-        //
+        $country->update($request->validated());
+
+        $country->refresh();
+
+        session()->flash('success', "Country \"$country->name\" updated successfully!");
+
+        return redirect()->back();
     }
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Country  $country
-     * @return \Illuminate\Http\Response
      */
-    public function destroy(Country $country)
+    public function destroy(Country $country): RedirectResponse
     {
-        //
+        $country->delete();
+
+        session()->flash('success', "Country \"$country->name\" deleted successfully!");
+
+        return redirect()->back();
     }
 }
