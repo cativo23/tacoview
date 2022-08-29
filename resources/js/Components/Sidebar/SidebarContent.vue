@@ -16,11 +16,24 @@
                 />
             </template>
         </SidebarLink>
+        <SidebarLink
+            title="Countries"
+            :href="route('countries.index')"
+            :active="route().current('countries.*')"
+        >
+            <template #icon>
+                <FlagIcon
+                    class="flex-shrink-0 w-6 h-6"
+                    aria-hidden="true"
+                />
+            </template>
+        </SidebarLink>
     </PerfrectScrollbar>
 </template>
 
 <script setup>
 import PerfrectScrollbar from '@/Components/PerfectScrollbar'
 import SidebarLink from '@/Components/Sidebar/SidebarLink.vue'
-import { DashboardIcon } from '@/Components/Icons/Outline'
+import { DashboardIcon } from '@/Components/Icons/Outline';
+import { FlagIcon } from '@heroicons/vue/outline';
 </script>

@@ -70,6 +70,8 @@ use Laravel\Scout\Searchable;
 class Country extends Model
 {
     use HasFactory;
-    
+
     use Searchable;
+
+    protected $guarded = [];
 }

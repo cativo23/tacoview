@@ -96,9 +96,10 @@ class CountryController extends Controller
 
         $country->refresh();
 
-        session()->flash('success', "Country \"$country->name\" updated successfully!");
+        $request->session()->flash('flash.banner', "Country \"$country->name\" updated successfully!");
+        $request->session()->flash('flash.bannerStyle', 'success');
 
-        return redirect()->back();
+        return redirect()->route('countries.index');
     }
 
     /**
