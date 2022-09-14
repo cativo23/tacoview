@@ -5,17 +5,21 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCityRequest;
 use App\Http\Requests\UpdateCityRequest;
 use App\Models\City;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class CityController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): Response
     {
-        //
+        $cities = City::query()->paginate(6);
+
+        return Inertia::render('City/Index', [
+            'cities' => $cities
+        ]);
     }
 
     /**
